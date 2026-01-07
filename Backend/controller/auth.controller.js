@@ -1,20 +1,51 @@
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
+import User from "../models/User.model";
 
-const jenerateToken = (id)=>{
-    return jwt.sign({id},process.env.JWT_SECRET, {expiresIn:"1h"})
-}
+const jenerateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+};
 
 // Register User
-exports.registerUser= (req,res)=>{
+export const registerUser = async (req, res) => {
+  const { fullName, email, password, profileImageUrl } = req.body;
+  // Validation: cheak user info
+  if (!fullName || email || password || prifleImageUrl) {
+    res.status(400).json({
+      message: "All filels are required",
+    });
+  }
+  try {
+    // cheak if user exist
+    const existUser = await User.findOne({ email });
+    if (existUser) {
+      res.status(400).json({
+        message: "Email already in use",
+      });
+    }
 
-}
+    // create user
+
+    const user = await User.create({
+      fullName,
+      email,
+      password,
+      profileImageUrl,
+    });
+    res.status(201).json({
+      id: user._id,
+      user,
+      token: jenerateToken(user._id),
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error registaring user",
+      error: err.message,
+    });
+  }
+};
 
 // login  User
-exports.loginUser= (req,res)=>{
-
-}
+export const loginUser = (req, res) => {};
 
 // user ingo User
-exports.userInfo= (req,res)=>{
-
-}
+export const userInfo = (req, res) => {};

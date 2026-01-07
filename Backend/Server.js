@@ -8,7 +8,7 @@ dotenv.config();
 const PORT = process.env.PORT || 5000;
 
 const app = express();
-MongoDB();
+MongoDB(); 
 
 // Middleware
 app.use(

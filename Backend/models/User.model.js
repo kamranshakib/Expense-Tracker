@@ -32,5 +32,5 @@ UserSchema.method.comparePassword = async (condidatePassword)=>{
    return await bcrypt.compare(condidatePassword,this.password)
 }
 
-
-export default UserSchema;
+const User = mongoose.model("User",UserSchema)
+export default User;
