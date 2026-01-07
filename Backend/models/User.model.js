@@ -27,7 +27,7 @@ UserSchema.pre("save", async function(){
 })
 
 // compare password
-UserSchema.method.comparePassword = async function (condidatePassword){
+UserSchema.methods.comparePassword = async function (condidatePassword){
    return await bcrypt.compare(condidatePassword,this.password)
 }
 
