@@ -5,13 +5,11 @@ const ProfilePhotoSelector = ({ image, setImage }) => {
     const inputRef = useRef(null);
     const [previewUrl, setPreviewUrl] = useState(null);
 
-    // اثر جانبی برای ایجاد URL preview از فایل
     useEffect(() => {
         if (image && image instanceof File) {
             const preview = URL.createObjectURL(image);
             setPreviewUrl(preview);
             
-            // Cleanup function برای جلوگیری از memory leak
             return () => {
                 URL.revokeObjectURL(preview);
             };
@@ -24,7 +22,6 @@ const ProfilePhotoSelector = ({ image, setImage }) => {
         const file = event.target.files[0];
         if (file) {
             setImage(file);
-            // مقدار input را reset نمی‌کنیم تا کاربر بتواند دوباره همان فایل را انتخاب کند
         }
     };
 
@@ -32,7 +29,6 @@ const ProfilePhotoSelector = ({ image, setImage }) => {
         setImage(null);
         setPreviewUrl(null);
         
-        // این قسمت مهم است: reset کردن مقدار input فایل
         if (inputRef.current) {
             inputRef.current.value = '';
         }
@@ -53,7 +49,6 @@ const ProfilePhotoSelector = ({ image, setImage }) => {
                 className='hidden'
             />
 
-            {/* وقتی عکس نداریم */}
             {!previewUrl && !image && (
                 <div className='relative'>
                     <div 
@@ -72,7 +67,6 @@ const ProfilePhotoSelector = ({ image, setImage }) => {
                 </div>
             )}
 
-            {/* وقتی عکس داریم */}
             {previewUrl && (
                 <div className='relative'>
                     <div 

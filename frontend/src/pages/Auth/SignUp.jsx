@@ -25,7 +25,6 @@ const SignUp = () => {
         </p>
         
         <form onSubmit={handleSignUp}>
-          {/* کامپوننت آپلود عکس - اضافه کردن پروپ‌ها */}
           <ProfilePhotoSelector 
             image={profilePic} 
             setImage={setProfilePic}
