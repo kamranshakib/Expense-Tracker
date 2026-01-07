@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6';
 
-const Input = ({ value, onChange, palaceholder, lable, type }) => {
+const Input = ({ value, onChange, placeholder, lable, type }) => {
     const [showPassword, setShowPassword] = useState(false)
     const toggleShowPassword = () => {
         setShowPassword(!showPassword)
     }
 
     return (
-        <div className=''>
+        <div className='mb-4'>
             <label className='text-[13px] text-slate-800'>{lable}</label>
             <div className='input-box'>
-                <input type={type == 'password' ? showPassword ? 'text' : 'password' : type}
-                    palaceholder={palaceholder}
+                <input 
+                    type={type == 'password' ? showPassword ? 'text' : 'password' : type}
+                    placeholder={placeholder}  // اصلاح: palaceholder → placeholder
                     className='w-full bg-transparent outline-none '
                     value={value}
-                    onChange={(e) => onChange(e)}
+                    onChange={onChange}  // نیازی به e => onChange(e) نیست
                 />
                 {type === 'password' && (
                     <>
@@ -35,9 +36,6 @@ const Input = ({ value, onChange, palaceholder, lable, type }) => {
                         )}
                     </>
                 )}
-
-
-                
             </div>
         </div>
     );
