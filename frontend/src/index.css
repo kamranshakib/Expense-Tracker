@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+    --font-display: "Poppins", sans-serif;
+    --breakpoint-3xl: 1920px;
+    --color-primary: #875cf5;
+}
+
+@layer base {
+    html {
+        font-family: var(--font-display);
+        direction: ltr;
+    }
+    
+    body {
+        background-color: #fcfbfc;
+        overflow-x: hidden;
+        font-family: var(--font-display);
+        text-align: left;
+    }
+}
+
+
+.input-box{
+    @apply  w-full  flex justify-between  gap-3 text-sm text-black  bg-slate-100 rounded px-4 py-3 mb-4 mt-3 border border-slate-200 outline-none ;
+}
+.btn-primary{
+    @apply w-full text-sm font-medium text-white bg-violet-500 shadow-lg shadow-purple-600/5 p-[10px] rounded-md my-1 hover:bg-purple-600/15  hover:text-purple-600
+}
