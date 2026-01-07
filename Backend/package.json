@@ -4,7 +4,7 @@
   "description": "",
   "license": "ISC",
   "author": "Kamran Shakib",
-  "type": "commonjs",
+  "type": "module",
   "main": "Server.js",
   "scripts": {
     "start": "node Server.js",
