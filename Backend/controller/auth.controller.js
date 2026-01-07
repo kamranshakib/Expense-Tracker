@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
-import User from "../models/User.model";
+import User from "../models/User.model.js";
+import { generateKey } from "crypto";
 
 const jenerateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1h" });
@@ -9,8 +10,8 @@ const jenerateToken = (id) => {
 export const registerUser = async (req, res) => {
   const { fullName, email, password, profileImageUrl } = req.body;
   // Validation: cheak user info
-  if (!fullName || email || password || prifleImageUrl) {
-    res.status(400).json({
+  if (!fullName || !email || !password) {
+     res.status(400).json({
       message: "All filels are required",
     });
   }
@@ -38,9 +39,9 @@ export const registerUser = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({
-      message: "Error registaring user",
-      error: err.message,
-    });
+      message: "Error registring user ",error: err.message
+    })
+    
   }
 };
 
