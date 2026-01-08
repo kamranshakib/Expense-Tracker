@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.model.js";
-import { generateKey } from "crypto";
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1h" });
@@ -73,11 +72,11 @@ export const loginUser = async (req, res) => {
 };
 
 // user info
-export const userInfo = (req, res) => {
+export const userInfo = async (req, res) => {
   try {
-    const user = User.findById(id).select("-password");
+    const user = await User.findById(req.user.id).select("-password");
     if (!user) {
-      res.status(400).json({
+      return res.status(400).json({
         message: "User not fine",
       });
     }
@@ -85,7 +84,7 @@ export const userInfo = (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Error registarin user",
-      error: err.message,
+      error: error.message,
     });
   }
 };
