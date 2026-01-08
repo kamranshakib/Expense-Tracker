@@ -11,7 +11,7 @@ export const registerUser = async (req, res) => {
   const { fullName, email, password, profileImageUrl } = req.body;
   // Validation: cheak user info
   if (!fullName || !email || !password) {
-     res.status(400).json({
+    res.status(400).json({
       message: "All filels are required",
     });
   }
@@ -23,9 +23,7 @@ export const registerUser = async (req, res) => {
         message: "Email already in use",
       });
     }
-
     // create user
-
     const user = await User.create({
       fullName,
       email,
@@ -39,42 +37,55 @@ export const registerUser = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({
-      message: "Error registring user ",error: err.message
-    })
-    
+      message: "Error registring user ",
+      error: err.message,
+    });
   }
 };
 
 // login  User
-export const loginUser =async (req, res) => {
-  const {email , password} = req.body;
-  if(!email || !password){
-   return res.status(400).json({
-      message: "All fields are required"
-    })
+export const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({
+      message: "All fields are required",
+    });
   }
   try {
-     const user = await User.findOne({email});
-  if(!user || !(await user.comparePassword(password))){
-    return res.status(400).json({
-      message: "Invalid credentials"
-    })
+    const user = await User.findOne({ email });
+    if (!user || !(await user.comparePassword(password))) {
+      return res.status(400).json({
+        message: "Invalid credentials",
+      });
+    }
 
-  }
-
-  res.status(200).json({
-    id: user._id,
-    user,
-    token: generateToken(user._id)
-  })
-    
+    res.status(200).json({
+      id: user._id,
+      user,
+      token: generateToken(user._id),
+    });
   } catch (err) {
     res.status(500).json({
-      message: "Error registring user ",error: err.message
-    })
+      message: "Error registring user ",
+      error: err.message,
+    });
   }
- 
 };
 
-// user ingo User
-export const userInfo = (req, res) => {};
+// user info
+export const userInfo = (req, res) => {
+  try {
+    const user = User.findById(id).select("-password");
+    if (!user) {
+      res.status(400).json({
+        message: "User not fine",
+      });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error registarin user",
+      error: err.message,
+    });
+  }
+};

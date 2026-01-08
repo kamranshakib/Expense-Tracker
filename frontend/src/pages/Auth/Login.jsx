@@ -9,7 +9,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  // تابع validateEmail اضافه شد
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
@@ -53,7 +52,7 @@ const Login = () => {
           </button>
           <p className='text-[13px] text-slate-800  mt-3'>
             Don't have an account? {""}
-            <Link className='font-medium text-primary underline' to='/signup'> {/* signup درست */}
+            <Link className='font-medium text-primary underline' to='/signup'> 
               SignUp
             </Link>
           </p>

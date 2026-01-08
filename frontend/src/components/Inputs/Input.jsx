@@ -13,10 +13,10 @@ const Input = ({ value, onChange, placeholder, lable, type }) => {
             <div className='input-box'>
                 <input 
                     type={type == 'password' ? showPassword ? 'text' : 'password' : type}
-                    placeholder={placeholder}  // اصلاح: palaceholder → placeholder
+                    placeholder={placeholder}  
                     className='w-full bg-transparent outline-none '
                     value={value}
-                    onChange={onChange}  // نیازی به e => onChange(e) نیست
+                    onChange={onChange}  
                 />
                 {type === 'password' && (
                     <>
