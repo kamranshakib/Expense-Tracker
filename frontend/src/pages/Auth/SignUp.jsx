@@ -9,6 +9,7 @@ const SignUp = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(''); // اضافه کردن این خط
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -23,33 +24,33 @@ const SignUp = () => {
         <p className='text-xs text-slate-700 mt-[5px] mb-6'>
           Join us today by entering your details below.
         </p>
-        
+
         <form onSubmit={handleSignUp}>
-          <ProfilePhotoSelector 
-            image={profilePic} 
+          <ProfilePhotoSelector
+            image={profilePic}
             setImage={setProfilePic}
           />
-          
+
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-            <Input 
+            <Input
               value={fullName}
               onChange={({ target }) => setFullName(target.value)}
               lable="Full Name"
               placeholder='John'
               type='text'
             />
-            
-            <Input 
-              value={email} 
+
+            <Input
+              value={email}
               onChange={({ target }) => setEmail(target.value)}
               lable="Email Address"
               placeholder='xyz@gmail.com'
               type='text'
             />
-            
+
             <div className='col-span-2'>
-              <Input 
-                value={password} 
+              <Input
+                value={password}
                 onChange={({ target }) => setPassword(target.value)}
                 lable="Password"
                 placeholder='Min 8 Characters'
@@ -57,7 +58,8 @@ const SignUp = () => {
               />
             </div>
           </div>
-          
+
+          {error && <p className='text-red-500 text-xs pb-2.5'>{error}</p>}
           <button type='submit' className='btn-primary'>
             SIGN UP
           </button>
@@ -65,7 +67,7 @@ const SignUp = () => {
           <p className='text-[13px] text-slate-800 mt-3'>
             Already have an account? {""}
             <Link className='font-medium text-primary underline' to='/login'>
-              Login
+              login
             </Link>
           </p>
         </form>
