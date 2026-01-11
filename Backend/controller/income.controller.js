@@ -60,20 +60,19 @@ export const downloadIncomeExcel = async (req, res) => {
   try {
     const income = await Income.find({ userId }).sort({ date: -1 });
 
-    const date = income.map((item) => ({
+    const data = income.map((item) => ({
       Source: item.source,
       Amount: item.amount,
-      Date: item.date,
+      Date: item.date ? item.date.toISOString().split("T")[0] : "",
     }));
-    const workSheet = xlsx.utils.json_to_sheet(date);
+    const workSheet = xlsx.utils.json_to_sheet(data);
     const workBook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(workBook, workSheet, "Icnome");
     xlsx.writeFile(workBook, "icnome_details.xlsx");
     res.download("icnome_details.xlsx");
   } catch (error) {
     res.status(500).josn({
-      message: "Server Error"
-    })
+      message: "Server Error",
+    });
   }
 };
-  

@@ -8,9 +8,9 @@ const ExpenseSchema = new mongoose.Schema(
       required: true,
     },
     icon: { type: String },
-    amount: { type: Number, rquired: true },
+    amount: { type: Number, required: true },
     catagory: { type: String, required: true },
-    date: { Date, default: Date.now },
+    date: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );
