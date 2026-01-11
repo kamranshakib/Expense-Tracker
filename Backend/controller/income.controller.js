@@ -1,4 +1,3 @@
-import express from "express";
 import xlsx from "xlsx";
 import Income from "../models/income.model.js";
 
@@ -77,3 +76,4 @@ export const downloadIncomeExcel = async (req, res) => {
     })
   }
 };
+  
