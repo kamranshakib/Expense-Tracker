@@ -49,7 +49,7 @@ export const deleteIncome = async (req, res) => {
 
   try {
     const deleteIncome = await Income.findByIdAndDelete(req.params.id);
-    return res.status(200).json(deleteIncome);
+    return res.status(200).json({message: "Income deleted Successfully"});
   } catch (error) {
       res.status(500).json({
         message: "Server Error "
