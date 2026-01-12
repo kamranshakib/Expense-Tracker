@@ -5,6 +5,7 @@ import MongoDB from "./config/Db.config.js";
 import authRoutes from "./routes/Auth.routes.js"
 import incomeRoutes from "./routes/Incode.routes.js"
 import expenseRoutes from "./routes/Expense.routes.js"
+import dashboardRoutes from "./routes/Dashboard.routes.js"
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -29,6 +30,7 @@ app.use(express.json());
 app.use("/api/v1/auth",authRoutes)
 app.use("/api/v1/income",incomeRoutes)
 app.use("/api/v1/expense",expenseRoutes)
+app.use("/api/v1/dashboard",dashboardRoutes)
 // uploads
 app.use("/uploads",express.static(path.join(__dirname, "uploads")))
 
