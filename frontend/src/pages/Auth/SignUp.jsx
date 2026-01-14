@@ -7,14 +7,36 @@ import ProfilePhotoSelector from '../../components/Inputs/ProfilePhotoSelector';
 const SignUp = () => {
   const [profilePic, setProfilePic] = useState(null);
   const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(''); // اضافه کردن این خط
+  const [error, setError] = useState(null);
+
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    console.log('SignUp clicked');
-    console.log('Profile Pic:', profilePic);
+    
+    if (!fullName) {
+      setError("Please enter your name");
+      return;
+    }
+    
+    if (!validateEmail(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+    
+    if (!password) {
+      setError('Please enter the Password');
+      return;
+    }
+    
+    setError("");
+    
+    // SignUp api Call
   }
 
   return (
@@ -34,7 +56,10 @@ const SignUp = () => {
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <Input
               value={fullName}
-              onChange={({ target }) => setFullName(target.value)}
+              onChange={({ target }) => {
+                setFullName(target.value);
+                if (error) setError(null);
+              }}
               lable="Full Name"
               placeholder='John'
               type='text'
@@ -42,7 +67,10 @@ const SignUp = () => {
 
             <Input
               value={email}
-              onChange={({ target }) => setEmail(target.value)}
+              onChange={({ target }) => {
+                setEmail(target.value);
+                if (error) setError(null);
+              }}
               lable="Email Address"
               placeholder='xyz@gmail.com'
               type='text'
@@ -51,7 +79,10 @@ const SignUp = () => {
             <div className='col-span-2'>
               <Input
                 value={password}
-                onChange={({ target }) => setPassword(target.value)}
+                onChange={({ target }) => {
+                  setPassword(target.value);
+                  if (error) setError(null);
+                }}
                 lable="Password"
                 placeholder='Min 8 Characters'
                 type='password'
@@ -60,10 +91,11 @@ const SignUp = () => {
           </div>
 
           {error && <p className='text-red-500 text-xs pb-2.5'>{error}</p>}
+          
           <button type='submit' className='btn-primary'>
             SIGN UP
           </button>
-          
+
           <p className='text-[13px] text-slate-800 mt-3'>
             Already have an account? {""}
             <Link className='font-medium text-primary underline' to='/login'>
