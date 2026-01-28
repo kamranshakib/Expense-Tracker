@@ -12,15 +12,6 @@ const SignUp = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-
-  const { updateUser } = useContext(UserContext);
-  const navigate = useNavigate();
-
-  const validateEmail = (email) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -91,34 +82,26 @@ const SignUp = () => {
               placeholder='John'
               type='text'
             />
-
-            <Input
-              value={email}
-              onChange={({ target }) => {
-                setEmail(target.value);
-                if (error) setError(null);
-              }}
+            
+            <Input 
+              value={email} 
+              onChange={({ target }) => setEmail(target.value)}
               lable="Email Address"
               placeholder='xyz@gmail.com'
               type='text'
             />
 
             <div className='col-span-2'>
-              <Input
-                value={password}
-                onChange={({ target }) => {
-                  setPassword(target.value);
-                  if (error) setError(null);
-                }}
+              <Input 
+                value={password} 
+                onChange={({ target }) => setPassword(target.value)}
                 lable="Password"
                 placeholder='Min 8 Characters'
                 type='password'
               />
             </div>
           </div>
-
-          {error && <p className='text-red-500 text-xs pb-2.5'>{error}</p>}
-
+          
           <button type='submit' className='btn-primary'>
             SIGN UP
           </button>
