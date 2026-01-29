@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* استایل‌های سفارشی خودت رو اینجا اضافه کن */
 @theme {
     --font-display: "Poppins", sans-serif;
     --breakpoint-3xl: 1920px;
@@ -20,10 +21,12 @@
     }
 }
 
-
-.input-box{
-    @apply  w-full  flex justify-between  gap-3 text-sm text-black  bg-slate-100 rounded px-4 py-3 mb-4 mt-3 border border-slate-200 outline-none ;
-}
-.btn-primary{
-    @apply w-full text-sm font-medium text-white bg-violet-500 shadow-lg shadow-purple-600/5 p-[10px] rounded-md my-1 hover:bg-purple-600/15  hover:text-purple-600
+@layer components {
+    .input-box{
+        @apply w-full flex justify-between gap-3 text-sm text-black bg-slate-100 rounded px-4 py-3 mb-4 mt-3 border border-slate-200 outline-none;
+    }
+    
+    .btn-primary{
+        @apply w-full text-sm font-medium text-white bg-violet-500 shadow-lg shadow-purple-600/5 p-[10px] rounded-md my-1 hover:bg-purple-600/15 hover:text-purple-600;
+    }
 }
