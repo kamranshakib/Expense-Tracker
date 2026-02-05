@@ -11,11 +11,14 @@
     "dev": "nodemon Server.js"
   },
   "dependencies": {
-    "cors": "^2.8.5",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.1.2",
+    "mongoose": "^9.1.5",
+    "multer": "^2.0.2",
+    "nodemon": "^3.1.11",
     "xlsx": "^0.18.5"
   }
 }
