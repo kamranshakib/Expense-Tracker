@@ -9,7 +9,7 @@ export const API_PATHS = {
     GIT_USER_INFO: "api/v1/auth/getUser",
   },
   DASHBOARD: {
-    GET_DATA: "api/v1/auth/dashboard",
+    GET_DATA: "api/v1/dashboard",
   },
   INCOME: {
     ADD_INCOME: "api/v1/income/add",
