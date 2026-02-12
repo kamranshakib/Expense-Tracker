@@ -13,7 +13,7 @@ const ExpenseTransactions = ({transactions, onSeeMore}) => { // اصلاح: tras
             </button>
         </div>
         <div className='mt-6'>
-            {transactions?.slice(0,5)?.map((expense) => ( // اصلاح: trasactions → transactions
+            {transactions?.slice(0,4)?.map((expense) => ( // اصلاح: trasactions → transactions
                 <TransactionInfoCard
                 key={expense._id}
                 title={expense.category} // اصلاح: catagory → category
