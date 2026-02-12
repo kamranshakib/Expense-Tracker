@@ -7,11 +7,9 @@ import { API_PATHS } from '../../Utils/apiPaths';
 import InfoCard from '../../components/Cards/InfoCard';
 import { addThousandsSeparatore } from '../../Utils/helper';
 
-// ✅ اصلاح import آیکن‌ها
 import { LuWalletMinimal, LuHandCoins } from 'react-icons/lu';
-import { IoMdCard } from 'react-icons/io'; // این جدا import شود
+import { IoMdCard } from 'react-icons/io';
 
-// کامپوننت‌های دیگر...
 import FinanceOverview from '../../components/Dashboard/FinanceOverview';
 import ExpenseTransactions from '../../components/Dashboard/ExpenseTransactions';
 import Last30DaysEpenses from '../../components/Dashboard/last30DaysEpenses';
@@ -21,96 +19,120 @@ import RecentTransactions from "../../components/Dashboard/RecenetTransactions";
 
 const Home = () => {
   useUserAuth();
-
   const navigate = useNavigate();
+
   const [dashboardData, setDashboardData] = useState({
-    totalBalance: 1830,
-    totalIncome: 1800,
-    totalExpense: 1000,
+    totalBalance: 0,
+    totalIncome: 0,
+    totalExpense: 0,
     recentTransactions: [],
     last30DaysExpenses: { transactions: [] },
     last60DaysExpenses: { transactions: [] }
   });
 
-  const [loading, setLoading] = useState(false);
-
   const fetchDashboardData = async () => {
-    if (loading) return;
-
-    setLoading(true);
     try {
-      const response = await axiosinstance.get(
-        `${API_PATHS.DASHBOARD.GET_DATA}`
-      );
+      const response = await axiosinstance.get(API_PATHS.DASHBOARD.GET_DATA);
+      return response.data;
+    } catch (error) {
+      console.log("Dashboard fetch error:", error);
+      return null;
+    }
+  };
 
-      if (response.data) {
-        setDashboardData(response.data)
+  const loadDashboardData = async () => {
+    try {
+      const data = await fetchDashboardData();
+      if (data) {
+        setDashboardData({
+          totalBalance: data.totalBalance || 0,
+          totalIncome: data.totalIncome || 0,
+          totalExpense: data.totalExpense || 0,
+          recentTransactions: data.recentTransactions || [],
+          last30DaysExpenses: data.last30DaysExpenses || { transactions: [] },
+          last60DaysExpenses: data.last60DaysExpenses || { transactions: [] }
+        });
       }
     } catch (error) {
-      console.log("Something went wrong, Please try again.", error);
-    } finally {
-      setLoading(false);
+      console.log("Load dashboard error:", error);
     }
   };
 
   useEffect(() => {
-    fetchDashboardData();
-    return () => { };
-  }, [])
+    loadDashboardData();
+
+    // 🔥 این مهم است
+    window.refreshDashboard = loadDashboardData;
+
+    return () => {
+      delete window.refreshDashboard;
+    };
+  }, []);
 
   return (
     <DashboardLayout activeMenu="Dashboard">
       <div className='my-5 mx-auto'>
+        
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
           <InfoCard
             icon={<IoMdCard />}
             label="Total Balance"
-            value={addThousandsSeparatore(dashboardData?.totalBalance || 0)}
+            value={addThousandsSeparatore(dashboardData.totalBalance)}
             color="bg-primary"
           />
           <InfoCard
-          
-            icon={<LuWalletMinimal />} // ✅ حالا درست کار می‌کند
+            icon={<LuWalletMinimal />}
             label="Total Income"
-            value={addThousandsSeparatore(dashboardData?.totalIncome || 0)}
+            value={addThousandsSeparatore(dashboardData.totalIncome)}
             color="bg-orange-500"
           />
           <InfoCard
             icon={<LuHandCoins />}
             label="Total Expense"
-            value={addThousandsSeparatore(dashboardData?.totalExpense || 0)}
+            value={addThousandsSeparatore(dashboardData.totalExpense)}
             color="bg-red-500"
           />
         </div>
+
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mt-6'>
+          
           <RecentTransactions
-            transactions={dashboardData?.recentTransactions || []}
+            transactions={dashboardData.recentTransactions || []}
             OnSeeMore={() => navigate("/expense")}
           />
+
           <FinanceOverview
-            totalBalance={dashboardData?.totalBalance || 0}
-            totalIncome={dashboardData?.totalIncome || 0}
-            totalExpense={dashboardData?.totalExpense || 0}
+            totalBalance={dashboardData.totalBalance}
+            totalIncome={dashboardData.totalIncome}
+            totalExpense={dashboardData.totalExpense}
           />
+
           <ExpenseTransactions
-            transactions={dashboardData?.last30DaysExpenses?.transactions || []}
+            transactions={dashboardData.last30DaysExpenses?.transactions || []}
             onSeeMore={() => navigate("/expense")}
           />
+
           <Last30DaysEpenses
-            data={dashboardData?.last30DaysExpenses?.transactions || []}
+            data={dashboardData.last30DaysExpenses?.transactions || []}
           />
+
           <RecentIncomeWithChart
-            data={dashboardData?.last60DaysExpenses?.transactions?.slice(0, 4) || []}
-            totalIncome={dashboardData?.totalIncome || 0} 
+            data={
+              dashboardData.last60DaysExpenses?.transactions
+                ? dashboardData.last60DaysExpenses.transactions.slice(0, 4)
+                : []
+            }
+            totalIncome={dashboardData.totalIncome}
           />
+
           <RecentIncome
-            transactions={dashboardData?.last60DaysExpenses?.transactions || []}
-            OnSeeMore={() => navigate("/income")} 
+            transactions={dashboardData.last60DaysExpenses?.transactions || []}
+            OnSeeMore={() => navigate("/income")}
           />
         </div>
       </div>
     </DashboardLayout>
   );
-}
+};
 
 export default Home;
