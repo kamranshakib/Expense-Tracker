@@ -1,9 +1,8 @@
-// AddIncomeFrom.js - کد کامل و قابل اجرا
 import React, { useState } from 'react'
 import Input from "../Inputs/Input.jsx"
-import EmojiPickerPopup from '../EmojiPickerPopup.jsx';
+import EmojiPickerPopup from '../../components/EmojiPickerPopup.jsx';
 
-const AddIncomeFrom = ({onAddIncome}) => {
+const AddIncomeForm = ({ onAddIncome }) => {
     const [income, setIncome] = useState({
         source: "",
         amount: "",
@@ -11,18 +10,23 @@ const AddIncomeFrom = ({onAddIncome}) => {
         icon: "💰",
     });
 
-    const handleChange = (key, value) => setIncome({...income, [key]: value});
-    
+    const handleChange = (key, value) =>
+        setIncome({ ...income, [key]: value });
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+
         if (!income.source || !income.amount || !income.date) {
             alert("Please fill all fields");
             return;
         }
-        
-        onAddIncome(income);
-        
+
+        onAddIncome({
+            ...income,
+            _id: Date.now(),        // ✅ مهم — اصلاح شد
+            amount: Number(income.amount) // ✅ حتماً عدد باشد
+        });
+
         setIncome({
             source: "",
             amount: "",
@@ -30,40 +34,46 @@ const AddIncomeFrom = ({onAddIncome}) => {
             icon: "💰",
         });
     };
-    
+
     return (
         <form onSubmit={handleSubmit}>
             <EmojiPickerPopup
                 icon={income.icon}
-                onSelect={(selectedIcon) => handleChange("icon", selectedIcon)} 
+                onSelect={(selectedIcon) =>
+                    handleChange("icon", selectedIcon)
+                }
             />
 
             <Input
                 value={income.source}
-                onChange={({target}) => handleChange("source", target.value)}
+                onChange={({ target }) =>
+                    handleChange("source", target.value)
+                }
                 label="Income Source"
                 placeholder='Freelance, Salary, etc'
                 type='text'
             />
 
-            <Input 
+            <Input
                 value={income.amount}
-                onChange={({target}) => handleChange("amount", target.value)}
+                onChange={({ target }) =>
+                    handleChange("amount", target.value)
+                }
                 label="Amount"
                 placeholder='0'
                 type='number'
                 min="0"
-                step="1000"
             />
 
             <Input
                 value={income.date}
-                onChange={({target}) => handleChange("date", target.value)}
+                onChange={({ target }) =>
+                    handleChange("date", target.value)
+                }
                 label="Date"
-                placeholder=''
                 type='date'
                 max={new Date().toISOString().split('T')[0]}
-            /> 
+            />
 
             <div className='flex justify-end mt-6'>
                 <button
@@ -72,9 +82,9 @@ const AddIncomeFrom = ({onAddIncome}) => {
                 >
                     Add Income
                 </button>
-            </div>      
+            </div>
         </form>
     )
 }
 
-export default AddIncomeFrom;
+export default AddIncomeForm;
