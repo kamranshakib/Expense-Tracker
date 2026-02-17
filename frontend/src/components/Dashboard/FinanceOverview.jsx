@@ -5,7 +5,6 @@
   const COLORS = ["#875CF5", "#FA2C37", "#FF6900"];
 
   const FinanceOverview = ({totalBalance, totalIncome, totalExpense}) => {
-      // ✅ محاسبه totalBalance اگر صفر بود
       const calculatedTotalBalance = totalBalance || (totalIncome - totalExpense);
       
       const balanceData = [

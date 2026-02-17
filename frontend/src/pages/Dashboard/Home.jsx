@@ -27,7 +27,7 @@ const Home = () => {
     totalExpense: 0,
     recentTransactions: [],
     last30DaysExpenses: { transactions: [] },
-    last60DaysExpenses: { transactions: [] }
+    last60DaysIncome: { transactions: [] } // توجه: last60DaysIncome اضافه شد
   });
 
   const fetchDashboardData = async () => {
@@ -50,7 +50,7 @@ const Home = () => {
           totalExpense: data.totalExpense || 0,
           recentTransactions: data.recentTransactions || [],
           last30DaysExpenses: data.last30DaysExpenses || { transactions: [] },
-          last60DaysExpenses: data.last60DaysExpenses || { transactions: [] }
+          last60DaysIncome: data.last60DaysIncome || { transactions: [] } // توجه: Income درست شد
         });
       }
     } catch (error) {
@@ -61,7 +61,6 @@ const Home = () => {
   useEffect(() => {
     loadDashboardData();
 
-    // 🔥 این مهم است
     window.refreshDashboard = loadDashboardData;
 
     return () => {
@@ -72,7 +71,8 @@ const Home = () => {
   return (
     <DashboardLayout activeMenu="Dashboard">
       <div className='my-5 mx-auto'>
-        
+
+        {/* کارت‌های بالا */}
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
           <InfoCard
             icon={<IoMdCard />}
@@ -94,8 +94,9 @@ const Home = () => {
           />
         </div>
 
+        {/* بخش داشبورد اصلی */}
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mt-6'>
-          
+
           <RecentTransactions
             transactions={dashboardData.recentTransactions || []}
             OnSeeMore={() => navigate("/expense")}
@@ -115,20 +116,19 @@ const Home = () => {
           <Last30DaysEpenses
             data={dashboardData.last30DaysExpenses?.transactions || []}
           />
+          
 
+          {/* ✅ اصلاح شده: داده Income داده می‌شود */}
           <RecentIncomeWithChart
-            data={
-              dashboardData.last60DaysExpenses?.transactions
-                ? dashboardData.last60DaysExpenses.transactions.slice(0, 4)
-                : []
-            }
+            data={dashboardData.last60DaysIncome?.transactions?.slice(0, 4) || []}
             totalIncome={dashboardData.totalIncome}
           />
 
           <RecentIncome
-            transactions={dashboardData.last60DaysExpenses?.transactions || []}
+            transactions={dashboardData.last60DaysIncome?.transactions || []}
             OnSeeMore={() => navigate("/income")}
           />
+
         </div>
       </div>
     </DashboardLayout>
