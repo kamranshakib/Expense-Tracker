@@ -14,19 +14,18 @@ const ExpenseList = ({transactions,onDelete,onDownload}) => {
             </button>
         </div>
 
-        <div className=' grid grid-cols-1 md:grid-cols-2'>
+        <div className='grid grid-cols-1 md:grid-cols-2'>
             {transactions?.map((expense) => (
                 <TransactionInfoCard
-                key={expense._id}
-                title={expense.category}
-                icon={expense.icon}
-                date={moment(expense.date).format("DO MMM YYY")}
-                amount={expense.amount}
-                type="expense"
-                onDelete={()=> onDelete(expense._id)}
+                    key={expense._id || expense.id}
+                    title={expense.category || expense.catagory || "No Name"}
+                    icon={expense.icon || "💰"}
+                    date={moment(expense.date).format("DD MMM YYYY")}
+                    amount={expense.amount}
+                    type="expense"
+                    onDelete={() => onDelete(expense._id || expense.id)}
                 />
             ))}
-
         </div>
     </div>
   )

@@ -45,7 +45,7 @@ const Home = () => {
       const data = await fetchDashboardData();
       if (data) {
         setDashboardData({
-          totalBalance: data.totalBalance || 0,
+          finalBalance: data.totalBalance || 0,
           totalIncome: data.totalIncome || 0,
           totalExpense: data.totalExpense || 0,
           recentTransactions: data.recentTransactions || [],
@@ -77,7 +77,7 @@ const Home = () => {
           <InfoCard
             icon={<IoMdCard />}
             label="Total Balance"
-            value={addThousandsSeparatore(dashboardData.totalBalance)}
+            value={addThousandsSeparatore(dashboardData.finalBalance)}
             color="bg-primary"
           />
           <InfoCard
@@ -103,7 +103,7 @@ const Home = () => {
           />
 
           <FinanceOverview
-            totalBalance={dashboardData.totalBalance}
+            totalBalance={dashboardData.finalBalance}
             totalIncome={dashboardData.totalIncome}
             totalExpense={dashboardData.totalExpense}
           />

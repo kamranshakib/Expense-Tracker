@@ -3,7 +3,7 @@ import axios from "axios";
 import { BASE_URL } from "./apiPaths";
 
 const axiosinstance = axios.create({
-  baseURL: BASE_URL,
+  baseURL: `${BASE_URL}/api/v1`,  // اضافه کردن /api/v1 اینجا
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -29,7 +29,7 @@ axiosinstance.interceptors.response.use(
   (error) => {
     if (error.response) {
       if (error.response.status === 401) {
-        window.location.href = "/login"; // ریدایرکت به صفحه ورود
+        window.location.href = "/login";
       } else if (error.response.status === 500) {
         console.error("Server error, please try again later.");
       }
