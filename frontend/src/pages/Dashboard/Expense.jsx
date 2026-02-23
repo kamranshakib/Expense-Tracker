@@ -36,6 +36,26 @@ const Expense = () => {
     }
   };
 
+  // ✅ Download Excel
+  const handleDownload = async () => {
+    try {
+      const response = await axiosinstance.get(
+        API_PATHS.EXPENSE.DOWNLOAD_EXPENSE,
+        { responseType: "blob" }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "expenses.xlsx");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      toast.error("Failed to download file");
+    }
+  };
+
   // ✅ Add expense
   const handleAddExpense = async (expense) => {
     const { catagory, amount, date, icon } = expense;
@@ -68,7 +88,6 @@ const Expense = () => {
 
       await fetchExpenseDetails();
 
-      // 🔥 refresh dashboard
       if (window.refreshDashboard) {
         window.refreshDashboard();
       }
@@ -114,10 +133,9 @@ const Expense = () => {
           onDelete={(id) =>
             setOpenDeleteAlert({ show: true, data: id })
           }
-          onDownload={() => {}}
+          onDownload={handleDownload}
         />
 
-        {/* Add Modal */}
         <Modal
           isOpen={openAddExpenseModal}
           onClose={() => setOpenAddExpenseModal(false)}
@@ -129,7 +147,6 @@ const Expense = () => {
           />
         </Modal>
 
-        {/* Delete Modal */}
         <Modal
           isOpen={openDeleteAlert.show}
           onClose={() =>

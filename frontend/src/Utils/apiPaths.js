@@ -1,29 +1,27 @@
-// utils/apiPaths.js
-
 export const BASE_URL = "http://localhost:8000";
 
 export const API_PATHS = {
   AUTH: {
-    LOGIN: "api/v1/auth/login",
-    REGISTER: "api/v1/auth/register",
-    GIT_USER_INFO: "api/v1/auth/getUser",
+    LOGIN: "/auth/login",
+    REGISTER: "/auth/register",
+    GIT_USER_INFO: "/auth/getUser",
   },
   DASHBOARD: {
-    GET_DATA: "api/v1/dashboard",
+    GET_DATA: "/dashboard",
   },
   INCOME: {
-    ADD_INCOME: "api/v1/income/add",
-    GET_ALL_INCOME: "api/v1/income/get",
-    DELETE_INCOME: (incomeid) => `api/v1/income/${incomeid}`,
-    DOWNLOAD_INCOME: "api/v1/income/downloadexcel",
+    ADD_INCOME: "/income/add",
+    GET_ALL_INCOME: "/income/get",
+    DELETE_INCOME: (incomeid) => `/income/${incomeid}`,
+    DOWNLOAD_INCOME: "/income/downloadexcel",
   },
   EXPENSE: {
-    ADD_EXPENSE: "api/v1/expense/add",
-    GET_ALL_EXPENSE: "api/v1/expense/get",
-    DELETE_EXPENSE: (expenseid) => `api/v1/expense/${expenseid}`,
-    DOWNLOAD_EXPENSE: "api/v1/expense/downloadexcel",
+    ADD_EXPENSE: "/expense/add",
+    GET_ALL_EXPENSE: "/expense/get",
+    DELETE_EXPENSE: (expenseid) => `/expense/${expenseid}`,
+    DOWNLOAD_EXPENSE: "/expense/downloadexcel",
   },
   IMAGE: {
-    UPLOAD_IMAGE: "api/v1/auth/upload-image",
+    UPLOAD_IMAGE: "/auth/upload-image",
   },
 };

@@ -2,43 +2,43 @@ import React, { useState } from 'react';
 import Input from "../Inputs/Input";
 import EmojiPickerPopup from "../EmojiPickerPopup";
 
-const AddExpenseForm = ({ onAddExpense, onClose }) => {
-    const [expense, setExpense] = useState({
-        category: "",
+const AddIncomeForm = ({ onAddIncome, onClose }) => {
+    const [income, setIncome] = useState({
+        source: "",
         amount: "",
         date: "",
         icon: "💰"
     });
 
-    const handleChange = (key, value) => setExpense({...expense, [key]: value});
+    const handleChange = (key, value) => setIncome({...income, [key]: value});
 
     const handleSubmit = () => {
-        onAddExpense({
-            catagory: expense.category,
-            amount: expense.amount,
-            date: expense.date,
-            icon: expense.icon || "💰"
+        onAddIncome({
+            source: income.source,
+            amount: income.amount,
+            date: income.date,
+            icon: income.icon || "💰"
         });
     };
 
     return (
         <div className="space-y-4">
             <EmojiPickerPopup
-                icon={expense.icon}
+                icon={income.icon}
                 onSelect={(selectedIcon) => handleChange("icon", selectedIcon)}
             />
             
             <Input
-                value={expense.category}
-                onChange={({ target }) => handleChange("category", target.value)}
-                label="Category"
-                placeholder="Rent, Groceries, etc"
+                value={income.source}
+                onChange={({ target }) => handleChange("source", target.value)}
+                label="Source"
+                placeholder="Salary, Freelance, etc"
                 type="text"
                 required
             />
 
             <Input
-                value={expense.amount}
+                value={income.amount}
                 onChange={({ target }) => handleChange("amount", target.value)}
                 label="Amount"
                 placeholder="0.00"
@@ -49,7 +49,7 @@ const AddExpenseForm = ({ onAddExpense, onClose }) => {
             />
             
             <Input
-                value={expense.date}
+                value={income.date}
                 onChange={({ target }) => handleChange("date", target.value)}
                 label="Date"
                 type="date"
@@ -69,11 +69,11 @@ const AddExpenseForm = ({ onAddExpense, onClose }) => {
                     type='button'
                     onClick={handleSubmit}
                 >
-                    Add Expense
+                    Add Income
                 </button>
             </div>
         </div>
     );
 };
 
-export default AddExpenseForm;
+export default AddIncomeForm;
