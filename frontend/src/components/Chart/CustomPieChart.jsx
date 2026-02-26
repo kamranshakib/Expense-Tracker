@@ -30,6 +30,8 @@ const CustomPieChart = ({
     label = "",
     totalAmount = 0
 }) => {
+    const isMobile = window.innerWidth < 640; // موبایل
+
     return (
         <ResponsiveContainer width="100%" height={300}>
             <PieChart>
@@ -39,8 +41,8 @@ const CustomPieChart = ({
                     nameKey="name"
                     cx="50%"
                     cy="50%"
-                    outerRadius={130}
-                    innerRadius={100}
+                    outerRadius={isMobile ? 110 : 130}  // کمی بزرگ‌تر روی موبایل
+                    innerRadius={isMobile ? 80 : 100}   // کمی بزرگ‌تر روی موبایل
                     labelLine={false}
                 >
                     {data.map((entry, index) => (
@@ -84,4 +86,4 @@ const CustomPieChart = ({
     )
 }
 
-export default CustomPieChart
+export default CustomPieChart;

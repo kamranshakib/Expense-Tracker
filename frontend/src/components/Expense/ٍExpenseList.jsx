@@ -18,7 +18,7 @@ const ExpenseList = ({transactions,onDelete,onDownload}) => {
             {transactions?.map((expense) => (
                 <TransactionInfoCard
                     key={expense._id || expense.id}
-                    title={expense.category || expense.catagory || "No Name"}
+                    title={expense.catagory || "No Name"}
                     icon={expense.icon || "💰"}
                     date={moment(expense.date).format("DD MMM YYYY")}
                     amount={expense.amount}
