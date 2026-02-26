@@ -24,19 +24,22 @@ const CustomBarChart = ({ data, xDataKey = "month" }) => {
   };
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={data}>
-        <CartesianGrid stroke='none' />
-        <XAxis dataKey={xDataKey} tick={{ fontSize: 12, fill: "#555" }} stroke='none' />
-        <YAxis tick={{ fontSize: 12, fill: "#555" }} stroke='none' />
-        <Tooltip content={<CustomTooltip />} />
-        <Bar dataKey="amount" radius={[10, 10, 0, 0]}>
-          {data.map((entry, index) => (
-            <Cell key={index} fill={getBarColor(index)} />
-          ))}
-        </Bar>
-      </BarChart>
-    </ResponsiveContainer>
+    // والد div برای کنترل proportional
+    <div className="w-full" style={{ height: '250px', maxHeight: '300px' }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={data}>
+          <CartesianGrid stroke='none' />
+          <XAxis dataKey={xDataKey} tick={{ fontSize: 12, fill: "#555" }} stroke='none' />
+          <YAxis tick={{ fontSize: 12, fill: "#555" }} stroke='none' />
+          <Tooltip content={<CustomTooltip />} />
+          <Bar dataKey="amount" radius={[10, 10, 0, 0]}>
+            {data.map((entry, index) => (
+              <Cell key={index} fill={getBarColor(index)} />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 };
 
