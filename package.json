@@ -4,8 +4,8 @@
   "description": "",
   "main": "Server.js",
   "scripts": {
-   "build" : "npm install --prefix backend && npm install --prefix frontend --include=dev && npm run build --prefix frontend ",
-   "start" : "npm run start --prefix backend"
+   "build" : "npm install --prefix Backend && npm install --prefix frontend --include=dev && npm run build --prefix frontend ",
+   "start" : "npm run start --prefix Backend"
   },
   "repository": {  
     "type": "git",
