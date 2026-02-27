@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { SIDE_MENU_DATA } from "../../Utils/data";
-import { UserContext } from "../../context/userContext";
+import { UserContext } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import CharAvatar from "../Cards/CharAvatar";
 import { LuLogOut } from "react-icons/lu";
@@ -23,7 +23,7 @@ const SideMenu = ({ activeMenu }) => {
     navigate("/signup");
   };
 
-  // گرفتن مسیر عکس از یوزر
+
   const profileImagePath =
     user?.profilePic ||
     user?.profileImageUrl ||
@@ -31,7 +31,7 @@ const SideMenu = ({ activeMenu }) => {
     user?.imageUrl ||
     null;
 
-  // ساختن آدرس کامل عکس
+
   const profileImage = profileImagePath
     ? profileImagePath.startsWith("http")
       ? profileImagePath
