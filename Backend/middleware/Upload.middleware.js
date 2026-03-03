@@ -1,13 +1,7 @@
 import multer from "multer";
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()} - ${file.originalname}`);
-  },
-});
+// we no longer store files on disk; use memory storage so buffer is available.
+const storage = multer.memoryStorage();
 
 // file filter
 const fileFilter = (req, file, cb) => {

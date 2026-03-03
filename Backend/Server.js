@@ -10,6 +10,7 @@ import dashboardRoutes from './routes/Dashboard.routes.js'
 import path from "path";
 import { fileURLToPath } from "url";
 import multer from "multer";
+import cloudinary from "./lib/cloudinary.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -30,25 +31,32 @@ app.use(
 );
 app.use(express.json());
 
+// no more public uploads folder for static files
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// configure multer to store in memory only
+const upload = multer({ storage: multer.memoryStorage() });
 
+// API-level upload route, sends file to Cloudinary
+app.post(
+  "/api/v1/auth/upload-image",
+  upload.single("image"),
+  async (req, res) => {
+    if (!req.file) return res.status(400).json({ message: "No file uploaded" });
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, path.join(__dirname, "uploads")),
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  },
-});
-const upload = multer({ storage });
-
-
-app.post("/api/v1/auth/upload-image", upload.single("image"), (req, res) => {
-  if (!req.file) return res.status(400).json({ message: "No file uploaded" });
-  const imageUrl = `uploads/${req.file.filename}`;
-  res.json({ imageUrl });
-});
+    try {
+      const dataUri = `data:${req.file.mimetype};base64,${req.file.buffer.toString(
+        "base64"
+      )}`;
+      const result = await cloudinary.uploader.upload(dataUri, {
+        folder: "expense-tracker",
+      });
+      res.json({ imageUrl: result.secure_url });
+    } catch (err) {
+      console.error("upload error", err);
+      res.status(500).json({ message: "Image upload failed" });
+    }
+  }
+);
 
 
 app.use("/api/v1/auth", authRoutes);
