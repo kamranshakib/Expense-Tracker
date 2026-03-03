@@ -4,6 +4,7 @@ import { UserContext } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import CharAvatar from "../Cards/CharAvatar";
 import { LuLogOut } from "react-icons/lu";
+import { BASE_URL } from "../../Utils/apiPaths";
 
 const SideMenu = ({ activeMenu }) => {
   const { user, clearUser } = useContext(UserContext);
@@ -35,7 +36,7 @@ const SideMenu = ({ activeMenu }) => {
   const profileImage = profileImagePath
     ? profileImagePath.startsWith("http")
       ? profileImagePath
-      : `http://localhost:8000/${profileImagePath}`
+      : `${BASE_URL}/${profileImagePath}`
     : null;
 
   return (
