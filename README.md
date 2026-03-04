@@ -21,4 +21,4 @@ Kharj Yab is a full-stack expense tracker application built with React, Node.js 
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/kamranshakib/expanse-tracker.git
+git clone https://github.com/kamranshakib/expense-tracker.git
