@@ -5,34 +5,46 @@ import { BASE_URL } from "../../Utils/apiPaths";
 
 const ProfilePhotoSelector = ({ image, setImage }) => {
   const inputRef = useRef(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
+  const [filePreviewUrl, setFilePreviewUrl] = useState(null);
 
   useEffect(() => {
-    if (image instanceof File) {
-      const preview = URL.createObjectURL(image);
-      setPreviewUrl(preview);
-      return () => URL.revokeObjectURL(preview);
-    } else if (typeof image === "string") {
-      setPreviewUrl(`${BASE_URL}/${image}`);
-    } else {
-      setPreviewUrl(null);
-    }
-  }, [image]);
+    return () => {
+      if (filePreviewUrl) URL.revokeObjectURL(filePreviewUrl);
+    };
+  }, [filePreviewUrl]);
+
+  const previewUrl =
+    image instanceof File
+      ? filePreviewUrl
+      : typeof image === "string"
+        ? image.startsWith("http")
+          ? image
+          : `${BASE_URL}${image.startsWith("/") ? image : `/${image}`}`
+        : null;
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) setImage(file);
+    if (file) {
+      setImage(file);
+      setFilePreviewUrl(URL.createObjectURL(file));
+    }
   };
 
   const handleRemoveImage = () => {
     setImage(null);
-    setPreviewUrl(null);
+    setFilePreviewUrl(null);
     if (inputRef.current) inputRef.current.value = "";
   };
 
   return (
     <div className="flex justify-center mb-6">
-      <input type="file" accept="image/*" ref={inputRef} onChange={handleImageChange} className="hidden" />
+      <input
+        type="file"
+        accept="image/jpeg,image/png"
+        ref={inputRef}
+        onChange={handleImageChange}
+        className="hidden"
+      />
 
       {!previewUrl && (
         <div className="relative">

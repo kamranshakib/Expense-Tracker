@@ -36,7 +36,7 @@ const SideMenu = ({ activeMenu }) => {
   const profileImage = profileImagePath
     ? profileImagePath.startsWith("http")
       ? profileImagePath
-      : `${BASE_URL}/${profileImagePath}`
+      : `${BASE_URL}${profileImagePath.startsWith("/") ? profileImagePath : `/${profileImagePath}`}`
     : null;
 
   return (

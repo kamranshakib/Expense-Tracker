@@ -6,7 +6,6 @@ import ProfilePhotoSelector from "../../components/Inputs/ProfilePhotoSelector";
 import axiosinstance from "../../Utils/axiosInstance";
 import { API_PATHS } from "../../Utils/apiPaths";
 import { UserContext } from "../../context/UserContext";
-import uploadImage from "../../Utils/uploadimage";
 
 const SignUp = () => {
   const [profilePic, setProfilePic] = useState(null);
@@ -28,6 +27,15 @@ const SignUp = () => {
     if (!normalizedName) { setError("Please enter your name"); return; }
     if (!validateEmail(normalizedEmail)) { setError("Please enter a valid email"); return; }
     if (!password || password.length < 8) { setError("Password must be at least 8 characters"); return; }
+    if (
+      profilePic &&
+      (!(profilePic instanceof File) ||
+        !["image/jpeg", "image/png"].includes(profilePic.type) ||
+        profilePic.size > 2 * 1024 * 1024)
+    ) {
+      setError("Choose a JPG or PNG profile image up to 2 MB.");
+      return;
+    }
 
     setError("");
     setIsSubmitting(true);
@@ -35,8 +43,14 @@ const SignUp = () => {
     try {
       let profileImageUrl = "";
       if (profilePic instanceof File) {
-        const uploadRes = await uploadImage(profilePic);
-        profileImageUrl = uploadRes?.imageUrl || "";
+        const formData = new FormData();
+        formData.append("image", profilePic);
+        const uploadResponse = await axiosinstance.post(
+          API_PATHS.IMAGE.UPLOAD_IMAGE,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+        profileImageUrl = uploadResponse.data.imageUrl;
       }
 
       const response = await axiosinstance.post(API_PATHS.AUTH.REGISTER, {
@@ -55,7 +69,12 @@ const SignUp = () => {
       updateUser(user);
       navigate("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong");
+      setError(
+        err.response?.data?.message ||
+          (typeof err.response?.data === "string"
+            ? err.response.data
+            : err.message || "Unable to create your account. Please try again.")
+      );
     } finally {
       setIsSubmitting(false);
     }

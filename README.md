@@ -20,5 +20,13 @@ Kharj Yab is a full-stack expense tracker application built with React, Node.js 
 ##  Installation
 
 1. Clone the repository:
-```bash
+```
+
+## Profile image storage on Render
+
+Profile images are saved locally in `Backend/uploads` by default. Render's
+filesystem is temporary, so add a persistent disk to the backend service and
+set the `UPLOADS_DIR` environment variable to the disk mount path (for example,
+`/var/data/uploads`). Mount the disk at `/var/data` so uploaded profile images
+remain available after deploys and restarts.bash
 git clone https://github.com/kamranshakib/expense-tracker.git

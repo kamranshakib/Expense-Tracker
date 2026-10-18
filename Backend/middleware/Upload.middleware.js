@@ -1,19 +1,31 @@
 import multer from "multer";
+import { randomUUID } from "node:crypto";
+import { uploadsDirectory } from "../lib/uploads.js";
 
-// we no longer store files on disk; use memory storage so buffer is available.
-const storage = multer.memoryStorage();
+const extensionsByMimeType = {
+  "image/jpeg": ".jpg",
+  "image/png": ".png",
+};
 
-// file filter
-const fileFilter = (req, file, cb) => {
-  const allowdType = ["image/png", "image/jpg", "image/jpeg"];
-  if (allowdType.includes(file.mimetype)) {
-    cb(null, true);
+const storage = multer.diskStorage({
+  destination: uploadsDirectory,
+  filename: (req, file, callback) => {
+    callback(null, `${randomUUID()}${extensionsByMimeType[file.mimetype]}`);
+  },
+});
+
+const fileFilter = (req, file, callback) => {
+  if (extensionsByMimeType[file.mimetype]) {
+    callback(null, true);
   } else {
-    cb(new Error("Only .jpg , .png , .jpeg formats are allowed"), false);
+    callback(new Error("Only JPG and PNG images are allowed"), false);
   }
 };
 
-const upload = multer({ storage, fileFilter });
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 2 * 1024 * 1024 },
+});
 
 export default upload;
- 

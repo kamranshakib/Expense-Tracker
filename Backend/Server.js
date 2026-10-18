@@ -9,8 +9,7 @@ import expenseRoutes from './routes/Expense.routes.js'
 import dashboardRoutes from './routes/Dashboard.routes.js'
 import path from "path";
 import { fileURLToPath } from "url";
-import multer from "multer";
-import cloudinary from "./lib/cloudinary.js";
+import { uploadsDirectory } from "./lib/uploads.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,7 +18,6 @@ dotenv.config();
 const PORT = process.env.PORT || 8000;
 
 const app = express();
-MongoDB();
 
 // Middleware
 app.use(
@@ -31,33 +29,7 @@ app.use(
 );
 app.use(express.json());
 
-// no more public uploads folder for static files
-
-// configure multer to store in memory only
-const upload = multer({ storage: multer.memoryStorage() });
-
-// API-level upload route, sends file to Cloudinary
-app.post(
-  "/api/v1/auth/upload-image",
-  upload.single("image"),
-  async (req, res) => {
-    if (!req.file) return res.status(400).json({ message: "No file uploaded" });
-
-    try {
-      const dataUri = `data:${req.file.mimetype};base64,${req.file.buffer.toString(
-        "base64"
-      )}`;
-      const result = await cloudinary.uploader.upload(dataUri, {
-        folder: "expense-tracker",
-      });
-      res.json({ imageUrl: result.secure_url });
-    } catch (err) {
-      console.error("upload error", err);
-      res.status(500).json({ message: "Image upload failed" });
-    }
-  }
-);
-
+app.use("/uploads", express.static(uploadsDirectory, { dotfiles: "deny" }));
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/income", incomeRoutes)
@@ -73,4 +45,5 @@ if (process.env.NODE_ENV === "production") {
 }
 
 
+await MongoDB();
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
