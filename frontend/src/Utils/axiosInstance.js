@@ -1,9 +1,8 @@
-// utils/axiosInstance.js
 import axios from "axios";
 import { BASE_URL } from "./apiPaths";
 
 const axiosinstance = axios.create({
-  baseURL: `${BASE_URL}/api/v1`,  // اضافه کردن /api/v1 اینجا
+  baseURL: `${BASE_URL}/api/v1`,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -11,7 +10,6 @@ const axiosinstance = axios.create({
   },
 });
 
-// Request Interceptor: اضافه کردن توکن به هدر
 axiosinstance.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem("token");
@@ -23,12 +21,14 @@ axiosinstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response Interceptor: مدیریت خطاها
 axiosinstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
-      if (error.response.status === 401) {
+      const isAuthRequest = /\/auth\/(login|register)(?:\?|$)/.test(
+        error.config?.url || ""
+      );
+      if (error.response.status === 401 && !isAuthRequest) {
         window.location.href = "/login";
       } else if (error.response.status === 500) {
         console.error("Server error, please try again later.");

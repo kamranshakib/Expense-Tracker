@@ -14,6 +14,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
   const { updateUser } = useContext(UserContext);
@@ -22,11 +23,14 @@ const SignUp = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    if (!fullName) { setError("Please enter your name"); return; }
-    if (!validateEmail(email)) { setError("Please enter a valid email"); return; }
+    const normalizedName = fullName.trim();
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!normalizedName) { setError("Please enter your name"); return; }
+    if (!validateEmail(normalizedEmail)) { setError("Please enter a valid email"); return; }
     if (!password || password.length < 8) { setError("Password must be at least 8 characters"); return; }
 
     setError("");
+    setIsSubmitting(true);
 
     try {
       let profileImageUrl = "";
@@ -36,18 +40,24 @@ const SignUp = () => {
       }
 
       const response = await axiosinstance.post(API_PATHS.AUTH.REGISTER, {
-        fullName,
-        email,
+        fullName: normalizedName,
+        email: normalizedEmail,
         password,
         profileImageUrl,
       });
 
       const { token, user } = response.data;
+      if (!token || !user) {
+        setError("Sign up failed: invalid response from server.");
+        return;
+      }
       localStorage.setItem("token", token);
       updateUser(user);
       navigate("/dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -63,16 +73,18 @@ const SignUp = () => {
           <ProfilePhotoSelector image={profilePic} setImage={setProfilePic} />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input value={fullName} onChange={({target})=>{setFullName(target.value); if(error)setError("")}} lable="Full Name" placeholder="John Doe" type="text"/>
-            <Input value={email} onChange={({target})=>{setEmail(target.value); if(error)setError("")}} lable="Email Address" placeholder="xyz@gmail.com" type="email"/>
+            <Input value={fullName} onChange={({target})=>{setFullName(target.value); if(error)setError("")}} label="Full Name" placeholder="John Doe" type="text"/>
+            <Input value={email} onChange={({target})=>{setEmail(target.value); if(error)setError("")}} label="Email Address" placeholder="xyz@gmail.com" type="email"/>
             <div className="col-span-2">
-              <Input value={password} onChange={({target})=>{setPassword(target.value); if(error)setError("")}} lable="Password" placeholder="Min 8 Characters" type="password"/>
+              <Input value={password} onChange={({target})=>{setPassword(target.value); if(error)setError("")}} label="Password" placeholder="Min 8 Characters" type="password"/>
             </div>
           </div>
 
           {error && <p className="text-red-500 text-sm mt-3">{error}</p>}
 
-          <button type="submit" className="btn-primary mt-4">SIGN UP</button>
+          <button type="submit" className="btn-primary mt-4" disabled={isSubmitting}>
+            {isSubmitting ? "PLEASE WAIT..." : "SIGN UP"}
+          </button>
 
           <p className="text-[13px] text-slate-800 mt-3">
             Already have an account?{" "}

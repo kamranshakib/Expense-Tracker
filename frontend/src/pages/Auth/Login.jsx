@@ -11,6 +11,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { updateUser } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -19,7 +20,8 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (!validateEmail(email)) {
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!validateEmail(normalizedEmail)) {
       setError("Please enter a valid email address.");
       return;
     }
@@ -29,13 +31,13 @@ const Login = () => {
     }
 
     setError("");
+    setIsSubmitting(true);
 
     try {
-      console.log("Sending login request:", { email, password });
-
-      const response = await axiosinstance.post(API_PATHS.AUTH.LOGIN, { email, password });
-
-      console.log("Login response:", response.data);
+      const response = await axiosinstance.post(API_PATHS.AUTH.LOGIN, {
+        email: normalizedEmail,
+        password,
+      });
 
       const { token, user } = response.data;
 
@@ -51,8 +53,8 @@ const Login = () => {
       console.error("Login error:", err);
 
       if (err.response) {
-        if (err.response.status === 401) {
-          setError("Unauthorized: Invalid email or password.");
+        if (err.response.status === 401 || err.response.status === 400) {
+          setError(err.response.data.message || "Invalid email or password.");
         } else if (err.response.status === 500) {
           setError("Server error. Please try again later.");
         } else {
@@ -65,6 +67,8 @@ const Login = () => {
       } else {
         setError(err.message || "Something went wrong. Please try again.");
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -79,21 +83,21 @@ const Login = () => {
         <form onSubmit={handleLogin}>
           <Input 
             value={email} 
-            onChange={({ target }) => setEmail(target.value)}
-            lable="Email Address"
+            onChange={({ target }) => { setEmail(target.value); setError(""); }}
+            label="Email Address"
             placeholder='xyz@gmail.com'
-            type='text'
+            type='email'
           />
           <Input 
             value={password} 
-            onChange={({ target }) => setPassword(target.value)}
-            lable="Password"
+            onChange={({ target }) => { setPassword(target.value); setError(""); }}
+            label="Password"
             placeholder='Min 8 Characters'
             type='password'
           />
           {error && <p className='text-red-500 text-xs pb-2.5'>{error}</p>}
-          <button type='submit' className='btn-primary'>
-            LOGIN
+          <button type='submit' className='btn-primary' disabled={isSubmitting}>
+            {isSubmitting ? "PLEASE WAIT..." : "LOGIN"}
           </button>
           <p className='text-[13px] text-slate-800 mt-3'>
             Don't have an account?{" "}

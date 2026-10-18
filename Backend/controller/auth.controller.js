@@ -8,36 +8,48 @@ const generateToken = (id) => {
 // Register User
 export const registerUser = async (req, res) => {
   const { fullName, email, password, profileImageUrl } = req.body;
-  // Validation: cheak user info
-  if (!fullName || !email || !password) {
-    res.status(400).json({
-      message: "All filels are required",
+  const normalizedName = typeof fullName === "string" ? fullName.trim() : "";
+  const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+  if (!normalizedName || !normalizedEmail || typeof password !== "string") {
+    return res.status(400).json({
+      message: "Full name, email, and password are required",
     });
   }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+    return res.status(400).json({ message: "Please enter a valid email address" });
+  }
+  if (password.length < 8) {
+    return res.status(400).json({ message: "Password must be at least 8 characters" });
+  }
+
   try {
-    // cheak if user exist
-    const existUser = await User.findOne({ email });
+    const existUser = await User.findOne({ email: normalizedEmail });
     if (existUser) {
-      res.status(400).json({
+      return res.status(409).json({
         message: "Email already in use",
       });
     }
-    // create user
+
     const user = await User.create({
-      fullName,
-      email,
+      fullName: normalizedName,
+      email: normalizedEmail,
       password,
-      profileImageUrl,
+      profileImageUrl: profileImageUrl || null,
     });
+    const userData = user.toObject();
+    delete userData.password;
+
     res.status(201).json({
       id: user._id,
-      user,
+      user: userData,
       token: generateToken(user._id),
     });
   } catch (err) {
+    if (err.code === 11000) {
+      return res.status(409).json({ message: "Email already in use" });
+    }
     res.status(500).json({
-      message: "Error registring user ",
-      error: err.message,
+      message: "Unable to register user",
     });
   }
 };
@@ -45,28 +57,30 @@ export const registerUser = async (req, res) => {
 // login  User
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) {
+  if (typeof email !== "string" || typeof password !== "string" || !email || !password) {
     return res.status(400).json({
       message: "All fields are required",
     });
   }
   try {
-    const user = await User.findOne({ email });
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+    const user = await User.findOne({ email: normalizedEmail });
     if (!user || !(await user.comparePassword(password))) {
-      return res.status(400).json({
+      return res.status(401).json({
         message: "Invalid credentials",
       });
     }
 
+    const userData = user.toObject();
+    delete userData.password;
     res.status(200).json({
       id: user._id,
-      user,
+      user: userData,
       token: generateToken(user._id),
     });
   } catch (err) {
     res.status(500).json({
-      message: "Error registring user ",
-      error: err.message,
+      message: "Unable to log in",
     });
   }
 };

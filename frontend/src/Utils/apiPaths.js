@@ -3,7 +3,7 @@ export const API_PATHS = {
   AUTH: {
     LOGIN: "/auth/login",
     REGISTER: "/auth/register",
-    GIT_USER_INFO: "/auth/getUser",
+    GET_USER_INFO: "/auth/getUser",
   },
   DASHBOARD: {
     GET_DATA: "/dashboard",
